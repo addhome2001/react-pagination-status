@@ -2,7 +2,7 @@
   "name": "react-pagination-status",
   "version": "1.0.0",
   "description": "A pagination component for React",
-  "main": "component/index.jsx",
+  "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha -w --recursive __test__/setup.js __test__/",
     "build": "webpack-dev-server --devtool eval --progress --colors --hot"
