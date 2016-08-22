@@ -1,20 +1,25 @@
 {
   "name": "react-pagination-status",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A pagination component for React",
   "main": "index.js",
   "scripts": {
     "test:watch": "NODE_ENV=test ./node_modules/.bin/mocha -w --recursive __test__/setup.js __test__/",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --recursive __test__/setup.js __test__/",
-    "build": "webpack-dev-server --devtool eval --progress --colors --hot"
+    "start": "webpack-dev-server --devtool eval --progress --colors --hot"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/addhome2001/react-pagination-status.git"
   },
-  "keywords": [],
+  "keywords": [
+      "react",
+      "component",
+      "pagination",
+      "status"
+  ],
   "author": "addhome2001",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/addhome2001/react-pagination-status/issues"
   },
