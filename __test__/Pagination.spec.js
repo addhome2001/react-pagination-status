@@ -28,7 +28,7 @@ describe('Test DataTable shareComponent', () => {
 
     it('should apply class .active by defaultProps: activePage', () => {
         const wrapper = shallowComponent({ activePage: 2 });
-        expect(wrapper.find('.pagination').childAt(3).hasClass('active')).to.equal(true);
+        expect(wrapper.find('.react-pagination-status').childAt(3).hasClass('active')).to.equal(true);
     });
 
     it('should have correct number of button', () => {
@@ -41,9 +41,9 @@ describe('Test DataTable shareComponent', () => {
         const wrapper = shallowComponent(defaultProps);
 
         expect(wrapper.state('pageCount')).to.equal(pageCount);
-        expect(wrapper.find('.pagination').children('li')).to.have.length(pageCount + 2);
-        expect(wrapper.find('.pagination').children('li').first().text()).to.equal(defaultProps.prePageText);
-        expect(wrapper.find('.pagination').children('li').last().text()).to.equal(defaultProps.nextPageText);
+        expect(wrapper.find('.react-pagination-status').children('li')).to.have.length(pageCount + 2);
+        expect(wrapper.find('.react-pagination-status').children('li').first().text()).to.equal(defaultProps.prePageText);
+        expect(wrapper.find('.react-pagination-status').children('li').last().text()).to.equal(defaultProps.nextPageText);
     });
 
     it('should trigger handleChangePage when click nextPageButton or prePageButton', () => {
@@ -51,12 +51,12 @@ describe('Test DataTable shareComponent', () => {
         const wrapper = mountComponent({ handleChangePage: handleChanger });
 
         /* Click Prev Button */
-        wrapper.find('.pagination').children('li').first().simulate('click');
+        wrapper.find('.react-pagination-status').children('li').first().simulate('click');
         expect(handleChanger.callCount).to.equal(1);
         expect(handleChanger.calledWith(2)).to.equal(true);
 
         /* Click Next Button */
-        wrapper.find('.pagination').children('li').last().simulate('click');
+        wrapper.find('.react-pagination-status').children('li').last().simulate('click');
         expect(handleChanger.callCount).to.equal(2);
         expect(handleChanger.calledWith(1)).to.equal(true);
     });
@@ -66,17 +66,17 @@ describe('Test DataTable shareComponent', () => {
         const handleChanger = spy();
         const wrapper = mountComponent({ handleChangePage: handleChanger });
 
-        wrapper.find('.pagination').childAt(2).simulate('click');
+        wrapper.find('.react-pagination-status').childAt(2).simulate('click');
         expect(handleChanger.callCount).to.equal(1);
         expect(handleChanger.calledWith(1)).to.equal(true);
         wrapper.setProps({ activePage: 1 });
-        expect(wrapper.find('.pagination').childAt(2).hasClass('active')).to.equal(true);
+        expect(wrapper.find('.react-pagination-status').childAt(2).hasClass('active')).to.equal(true);
 
-        wrapper.find('.pagination').childAt(3).simulate('click');
+        wrapper.find('.react-pagination-status').childAt(3).simulate('click');
         expect(handleChanger.callCount).to.equal(2);
         expect(handleChanger.calledWith(2)).to.equal(true);
         wrapper.setProps({ activePage: 2 });
-        expect(wrapper.find('.pagination').childAt(3).hasClass('active')).to.equal(true);
+        expect(wrapper.find('.react-pagination-status').childAt(3).hasClass('active')).to.equal(true);
 
     });
 
