@@ -8,10 +8,12 @@ export default class Pagination extends Component {
         totalCount: PropTypes.number.isRequired,
         perPageItemCount: PropTypes.number.isRequired,
         nextPageText: PropTypes.string,
-        prePageText: PropTypes.string
+        prePageText: PropTypes.string,
+        className: PropTypes.string,
     };
 
     static defaultProps = {
+        className: "react-pagination-status",
         nextPageText: "下一頁",
         prePageText: "上一頁"
     };
@@ -43,12 +45,12 @@ export default class Pagination extends Component {
     }
 
     render() {
-        const { activePage, nextPageText, prePageText } = this.props;
+        const { activePage, nextPageText, prePageText, className } = this.props;
         const { pageCount } = this.state;
         const pageArr = [...new Array(pageCount).keys()];
 
         return (
-            <ul className="pagination">
+            <ul className={ className }>
                 <li onClick={ this.handleChangePage('pre') }><a>{ prePageText }</a></li>
                     {
                         pageArr.map((u, i) => {
