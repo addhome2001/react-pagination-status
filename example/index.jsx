@@ -1,6 +1,6 @@
 import { render } from 'react-dom';
 import React from 'react';
-import Pagination from '../src/index.jsx';
+import Pagination from '../src/index.js';
 
 const App = class App extends React.Component {
 
