@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/addhome2001/react-pagination-status.svg?branch=master)](https://travis-ci.org/addhome2001/react-pagination-status)
 
+[![Known Vulnerabilities](https://snyk.io/test/github/addhome2001/react-pagination-status/badge.svg)](https://snyk.io/test/github/addhome2001/react-pagination-status)
+
 A simple pagination component for you to manage page status.
 
 ## Install
