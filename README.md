@@ -58,6 +58,8 @@ export default class app extends React.Component {
 }
 ````
 
+## [Demo]( https://addhome2001.github.io/react-pagination-status/)
+
 ## API
 
 ### Pagination
