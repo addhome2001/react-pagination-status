@@ -8,6 +8,8 @@
 
 A simple pagination component for you to manage page status.
 
+>If you want use `react-pagination-status` with table component, maybe you can try [this](https://www.npmjs.com/package/react-pagination-table)
+
 ## Install
 ```
  npm install react-pagination-status
