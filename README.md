@@ -1,14 +1,15 @@
 # react-pagination-status
 
-> A pagination component for React
-
 [![Build Status](https://travis-ci.org/addhome2001/react-pagination-status.svg?branch=master)](https://travis-ci.org/addhome2001/react-pagination-status)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/addhome2001/react-pagination-status/badge.svg)](https://snyk.io/test/github/addhome2001/react-pagination-status)
 
-A simple pagination component for you to manage page status.
+> A pagination component of React let you to manage page status.
 
->If you want use `react-pagination-status` with table component, maybe you can try [this](https://www.npmjs.com/package/react-pagination-table)
+## [Demo]( https://addhome2001.github.io/react-pagination-status/)
+
+
+If you want use `react-pagination-status` with table component, maybe you can try [this](https://www.npmjs.com/package/react-pagination-table)
 
 ## Install
 ```
@@ -59,8 +60,6 @@ export default class app extends React.Component {
     }
 }
 ````
-
-## [Demo]( https://addhome2001.github.io/react-pagination-status/)
 
 ## API
 
