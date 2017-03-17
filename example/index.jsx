@@ -1,25 +1,34 @@
+/* @flow */
 import { render } from 'react-dom';
 import React from 'react';
 import Pagination from '../lib';
 
+type State = {
+  activePage: number,
+}
+
 const App = class App extends React.Component {
+
+  state: State
+
+  handleChangePage: (page: number) => void
 
   constructor(props) {
     super(props);
-    this.handleChangePage = ::this.handleChangePage;
+    this.handleChangePage = this.handleChangePage.bind(this);
     this.state = {
       activePage: 0,
     };
   }
 
-  handleChangePage(page) {
+  handleChangePage(page: number) {
     this.setState({
       activePage: page,
     });
   }
 
   render() {
-    const { activePage } = this.state;
+    const { activePage }: { activePage: number } = this.state;
 
     return (
       <div>
