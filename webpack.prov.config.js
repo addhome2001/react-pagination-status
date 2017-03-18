@@ -42,12 +42,12 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
   ],
   resolve: {
-    extensions: ['.js', 'jsx'],
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.js[x]$/,
+        test: /\.js[x]?$/,
         exclude: /(node_modules)/,
         use: [
           {

@@ -31,13 +31,13 @@ module.exports = {
     }),
   ],
   resolve: {
-    extensions: ['.js', 'jsx'],
+    extensions: ['.js', '.jsx'],
     modules: ['node_modules'],
   },
   module: {
     rules: [
       {
-        test: /\.js[x]$/,
+        test: /\.js[x]?$/,
         exclude: /(node_modules)/,
         use: [
           {
