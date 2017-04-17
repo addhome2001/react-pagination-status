@@ -1,13 +1,13 @@
 /* @flow */
 import { render } from 'react-dom';
-import React from 'react';
+import React, { Component } from 'react';
 import Pagination from '../lib';
 
 type State = {
   activePage: number,
 }
 
-const App = class App extends React.Component {
+const App = class App extends Component {
 
   state: State
 
