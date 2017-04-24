@@ -6,9 +6,6 @@
 
 > A pagination component of React let you to manage page status.
 
-## [Demo]( https://addhome2001.github.io/react-pagination-status/)
-
-
 If you want use `react-pagination-status` with table component, maybe you can try [this](https://www.npmjs.com/package/react-pagination-table)
 
 ## Install
@@ -22,6 +19,8 @@ npm test
 ```
 
 ## Usage
+
+### [Demo]( https://addhome2001.github.io/react-pagination-status/)
 
 ````javascript
 import React from 'react';
