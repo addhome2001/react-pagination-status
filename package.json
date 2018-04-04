@@ -14,6 +14,7 @@
     "lint": "./node_modules/.bin/eslint .",
     "validate": "npm run lint && npm run flow && npm test",
     "all": "npm run compile && npm run build:demo",
+    "precommit": "npm run validate",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect"
   },
