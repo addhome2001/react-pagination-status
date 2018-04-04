@@ -1,9 +1,12 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow, mount, configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 
 import Pagination from '../src';
+
+configure({ adapter: new Adapter() });
 
 const handleChange = spy();
 
@@ -24,7 +27,7 @@ const mountComponent = props =>
 describe('Test DataTable shareComponent', () => {
   beforeEach(() => handleChange.reset());
 
-  it('should have props', () => {
+  it('correct props', () => {
     const wrapper = shallowComponent();
     expect(wrapper.instance().props).eql({
       activePage: 0,
@@ -37,12 +40,12 @@ describe('Test DataTable shareComponent', () => {
     });
   });
 
-  it('should apply class .active by defaultProps: activePage', () => {
+  it('with className: .active by defaultProps: activePage', () => {
     const wrapper = shallowComponent({ activePage: 2 });
     expect(wrapper.find('.react-pagination-status').childAt(3).hasClass('active')).to.equal(true);
   });
 
-  it('should have correct number of button', () => {
+  it('button amounts', () => {
     const defaultProps = {
       prePageText: 'prev',
       nextPageText: 'next',
@@ -57,7 +60,7 @@ describe('Test DataTable shareComponent', () => {
     expect(wrapper.find('.react-pagination-status').children('li').last().text()).to.equal(defaultProps.nextPageText);
   });
 
-  it('should trigger handleChangePage when click nextPageButton or prePageButton', () => {
+  it('invoke handleChangePage when click on the nextPageButton or prePageButton', () => {
     const wrapper = mountComponent({ handleChangePage: handleChange });
 
     /* Click Prev Button */
@@ -72,19 +75,19 @@ describe('Test DataTable shareComponent', () => {
   });
 
 
-  it('should trigger handleChangePage when click page button and apply active css', () => {
+  it('invoke handleChangePage when click on the page button', () => {
     const wrapper = mountComponent({ handleChangePage: handleChange });
 
-    wrapper.find('.react-pagination-status').childAt(2).simulate('click');
+    wrapper.find('.react-pagination-status').hostNodes().childAt(2).simulate('click');
     expect(handleChange.callCount).to.equal(1);
     expect(handleChange.calledWith(1)).to.equal(true);
     wrapper.setProps({ activePage: 1 });
-    expect(wrapper.find('.react-pagination-status').childAt(2).hasClass('active')).to.equal(true);
+    expect(wrapper.find('.react-pagination-status').hostNodes().childAt(2).hasClass('active')).to.equal(true);
 
-    wrapper.find('.react-pagination-status').childAt(3).simulate('click');
+    wrapper.find('.react-pagination-status').hostNodes().childAt(3).simulate('click');
     expect(handleChange.callCount).to.equal(2);
     expect(handleChange.calledWith(2)).to.equal(true);
     wrapper.setProps({ activePage: 2 });
-    expect(wrapper.find('.react-pagination-status').childAt(3).hasClass('active')).to.equal(true);
+    expect(wrapper.find('.react-pagination-status').hostNodes().childAt(3).hasClass('active')).to.equal(true);
   });
 });
