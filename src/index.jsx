@@ -2,31 +2,93 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-type State = {
-  pageCount: number,
-}
+type PAGINATION_PART_TYPE =
+  | 'WHOLE_PAGES'
+  | 'HEAD_PART'
+  | 'MIDDLE_PART'
+  | 'TAIL_PART';
 
-type Props = {
+type PAGINATION_ACTIONS_TYPE =
+  | 'PREV'
+  | 'NEXT'
+
+type PaginationProps = {
   handleChangePage: (x: number) => void,
   activePage: number,
+  partialPageCount: number,
   totalCount: number,
   perPageItemCount: number,
-  nextPageText: string,
-  prePageText: string,
   className: string,
+  prePageText: string,
+  nextPageText: string,
 }
+
+type PageButtonProps = {
+  children?: string,
+  handleClick?: () => void,
+  disabled?: boolean,
+  active?: boolean,
+}
+
+const PAGINATION_PART = {
+  WHOLE_PAGES: 'WHOLE_PAGES',
+  HEAD_PART: 'HEAD_PART',
+  MIDDLE_PART: 'MIDDLE_PART',
+  TAIL_PART: 'TAIL_PART',
+};
+
+const PAGINATION_ACTIONS = {
+  PREV: 'PREV',
+  NEXT: 'NEXT',
+};
+
+const PageButtonHOC = (className: string) => {
+  const PageButton = ({
+    children,
+    handleClick,
+    disabled,
+    active,
+  }: PageButtonProps): React$Element<*> => {
+    const btnClassName = `${className}__btn`;
+    const disableClassName = disabled ? `${className}__btn--disable` : '';
+    const activeClassName = active ? `${className}__btn--active` : '';
+
+    return (
+      <li className={ `${className}__item` } onClick={ handleClick }>
+        <button
+          className={ `${btnClassName} ${disableClassName || activeClassName}` }
+        >{ children }</button>
+      </li>
+    );
+  };
+
+  PageButton.displayName = 'PageButton';
+  PageButton.defaultProps = {
+    handleClick: () => {},
+    children: '',
+    disabled: false,
+    active: false,
+  };
+
+  return PageButton;
+};
 
 export default class Pagination extends Component {
 
-  state: State
-
-  handleChangePage: (status: mixed) => () => void
+  PageButton: (c: PageButtonProps) => React$Element<*>;
+  changePageByAction: (status: PAGINATION_ACTIONS_TYPE) => () => void;
+  changePage: (status: number) => () => void;
+  pageCount: number;
+  lastPage: number;
+  halfPartialPageCount: number;
+  pageArr: number[];
 
   static propTypes = {
     handleChangePage: PropTypes.func.isRequired,
     activePage: PropTypes.number.isRequired,
     totalCount: PropTypes.number.isRequired,
     perPageItemCount: PropTypes.number.isRequired,
+    partialPageCount: PropTypes.number,
     nextPageText: PropTypes.string,
     prePageText: PropTypes.string,
     className: PropTypes.string,
@@ -34,69 +96,162 @@ export default class Pagination extends Component {
 
   static defaultProps = {
     className: 'react-pagination-status',
-    nextPageText: '下一頁',
     prePageText: '上一頁',
+    nextPageText: '下一頁',
+    partialPageCount: 5,
   };
 
-  constructor(props: Props) {
+  constructor(props: PaginationProps) {
     super(props);
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.state = {
-      pageCount: Math.ceil(props.totalCount / props.perPageItemCount),
+    this.changePageByAction = this.changePageByAction.bind(this);
+    this.changePage = this.changePage.bind(this);
+    this.pageCount = Math.ceil(props.totalCount / props.perPageItemCount);
+    this.lastPage = this.pageCount - 1;
+    this.pageArr = [...new Array(this.pageCount).keys()];
+    this.halfPartialPageCount = Math.floor(props.partialPageCount / 2);
+    this.PageButton = PageButtonHOC(props.className);
+  }
+
+  changePage(newPage: number): Function {
+    return (): void => {
+      const { activePage }: { activePage: number } = this.props;
+
+      if (activePage !== newPage && !isNaN(newPage)) {
+        this.props.handleChangePage(newPage);
+      }
     };
   }
 
-  handleChangePage(status: mixed): Function {
+  changePageByAction(status: PAGINATION_ACTIONS_TYPE): Function {
     return (): void => {
-      let { activePage }: { activePage: number } = this.props;
-      let { pageCount }: { pageCount: number } = this.state;
-      let newActive: mixed;
+      const { activePage }: { activePage: number } = this.props;
+      let newPage: number;
 
       switch (status) {
-        case 'next':
-          newActive = activePage === --pageCount ? 0 : ++activePage;
+        case PAGINATION_ACTIONS.PREV:
+          newPage = activePage === 0 ? activePage : activePage - 1;
           break;
-        case 'pre':
-          newActive = activePage === 0 ? --pageCount : --activePage;
+        case PAGINATION_ACTIONS.NEXT:
+          newPage = activePage === this.lastPage ? activePage : activePage + 1;
           break;
         default:
-          newActive = status;
+          newPage = activePage;
       }
-      this.props.handleChangePage(newActive);
+
+      if (activePage !== newPage) this.props.handleChangePage(newPage);
     };
+  }
+
+  getPaginationStatus(activePage: number): PAGINATION_PART_TYPE {
+    if (this.pageCount <= this.props.partialPageCount) {
+      return PAGINATION_PART.WHOLE_PAGES;
+    }
+
+    if (activePage < this.props.partialPageCount) {
+      return PAGINATION_PART.HEAD_PART;
+    }
+
+    if (this.pageCount - activePage <= this.props.partialPageCount) {
+      return PAGINATION_PART.TAIL_PART;
+    }
+
+    return PAGINATION_PART.MIDDLE_PART;
+  }
+
+  getPartialPages(
+    status: PAGINATION_PART_TYPE,
+    partialCount: number,
+    activePage: number,
+  ): number[] {
+    switch (status) {
+      case PAGINATION_PART.HEAD_PART:
+        return this.pageArr.slice(0, partialCount);
+      case PAGINATION_PART.TAIL_PART:
+        return this.pageArr.slice(this.pageCount - partialCount);
+      case PAGINATION_PART.MIDDLE_PART:
+        return this.pageArr.slice(
+          activePage - this.halfPartialPageCount,
+          activePage + this.halfPartialPageCount + 1,
+        );
+      default:
+        return this.pageArr;
+
+    }
   }
 
   render() {
+    const { PageButton } = this;
     const {
       activePage,
-      nextPageText,
+      partialPageCount,
       prePageText,
+      nextPageText,
       className,
     }: {
       activePage: number,
-      nextPageText: string,
+      partialPageCount: number,
       prePageText: string,
+      nextPageText: string,
       className: string,
     } = this.props;
 
-    const { pageCount }: { pageCount: number } = this.state;
-    const pageArr: number[] = [...new Array(pageCount).keys()];
+    const paginationStatus = this.getPaginationStatus(activePage);
+    const partialPages = this.getPartialPages(paginationStatus, partialPageCount, activePage);
+
+    const firstPage = this.pageArr[0];
+    const lastPage = this.pageArr[this.pageArr.length - 1];
+
+    const isWholePages = paginationStatus === PAGINATION_PART.WHOLE_PAGES;
+    const isInHeadPart = paginationStatus === PAGINATION_PART.HEAD_PART;
+    const isInMiddlePart = paginationStatus === PAGINATION_PART.MIDDLE_PART;
+    const isInTailPart = paginationStatus === PAGINATION_PART.TAIL_PART;
+
+    const isFirstPage = activePage === firstPage;
+    const isLastPage = activePage === lastPage;
 
     return (
       <ul className={ className }>
-        <li onClick={ this.handleChangePage('pre') }><a>{ prePageText }</a></li>
+        <PageButton
+          handleClick={ this.changePageByAction(PAGINATION_ACTIONS.PREV) }
+          disabled={ isFirstPage }
+        >
+          { prePageText }
+        </PageButton>
         {
-          pageArr.map((u: number, i) =>
-            <li
-              className={ activePage === i ? 'active' : null }
-              key={ `page-${u}` }
-              onClick={ this.handleChangePage(i) }
-            >
-              <a>{ i + 1 }</a>
-            </li>,
+          !isWholePages && (!isInHeadPart || isInMiddlePart) && (
+            <React.Fragment>
+              <PageButton handleClick={ this.changePage(firstPage) }>
+                { firstPage + 1 }
+              </PageButton>
+              <PageButton disabled>...</PageButton>
+            </React.Fragment>
           )
         }
-        <li onClick={ this.handleChangePage('next') }><a>{ nextPageText }</a></li>
+        {
+          partialPages.map((u: number) =>
+            <PageButton
+              handleClick={ this.changePage(u) }
+              key={ `page-${u}` }
+              active={ activePage === u }
+            >{ u + 1 }</PageButton>,
+          )
+        }
+        {
+          !isWholePages && (!isInTailPart || isInMiddlePart) && (
+            <React.Fragment>
+              <PageButton disabled>...</PageButton>
+              <PageButton handleClick={ this.changePage(lastPage) }>
+                { lastPage + 1 }
+              </PageButton>
+            </React.Fragment>
+          )
+        }
+        <PageButton
+          handleClick={ this.changePageByAction(PAGINATION_ACTIONS.NEXT) }
+          disabled={ isLastPage }
+        >
+          { nextPageText }
+        </PageButton>
       </ul>
     );
   }
