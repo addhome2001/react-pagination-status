@@ -1,7 +1,7 @@
 /* @flow */
 import { render } from 'react-dom';
 import React, { Component } from 'react';
-import Pagination from '../lib';
+import Pagination from '../src';
 
 type State = {
   activePage: number,
@@ -36,8 +36,9 @@ const App = class App extends Component {
         <Pagination
           handleChangePage={ this.handleChangePage }
           activePage={ activePage }
-          totalCount={ 10 }
-          perPageItemCount={ 2 }
+          totalCount={ 6 }
+          partialPageCount={ 5 }
+          perPageItemCount={ 1 }
           nextPageText="next"
           prePageText="prev"
         />
